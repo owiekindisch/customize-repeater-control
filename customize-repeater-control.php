@@ -37,7 +37,7 @@ class Theme_Customize_Repeater_Control extends WP_Customize_Control {
 	** Enqueue control related scripts/styles
 	*/
 	public function enqueue() {
-		wp_enqueue_script('customize-repeater-control', get_stylesheet_directory_uri() . '/assets/customize-repeater-control.js', array('jquery', 'customize-controls'), false, true);
+		wp_enqueue_script('customize-repeater-control', get_stylesheet_directory_uri() . 'customize-repeater-control.js', array('jquery', 'customize-controls'), false, true);
 	}
 
 	/*
