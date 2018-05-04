@@ -4,16 +4,15 @@
 	api.RepeaterControl = api.RepeaterControl || {};
 
 	api.RepeaterControl = api.Control.extend({
-		STATE: [],
-
 		ready: function ready() {
 			var control = this;
 
 			_.bindAll( this, 'addRepeaterRow', 'createRowSetting', 'normalizeSaveRequestQuery' );
 
+			this.STATE = [],
 			this.fieldQueryPattern = new RegExp( '^' + control.id + '\\[(\\d+)\\]\\[(\\S+)\\]$' );
-			this.rowContainer = this.container.find( '.customize-repeater-fields' );
-			this.columnContainer = $( '<li class="customize-repeater-field"><ul></ul></li>' )
+			this.rowContainer = this.container.find( '.customize-control-repeater-fields' );
+			this.columnContainer = this.container.find( '.customize-control-repeater-field.prototype' ).remove().clone().removeClass('prototype')
 			this.btnNew = this.container.find( '.customize-add-repeater-field' );
 
 			this.setupRepeaterRows();
@@ -39,7 +38,7 @@
 		},
 
 		addRepeaterRow: function (event) {
-			var control = this, Constructor, Control, options, size, index, setting, stateField, initialState;
+			var control = this, Constructor, Control, options, size, index, column, setting, stateField, initialState;
 
 			if ( ! ( event instanceof Event ) ) {
 				initialState = event;
@@ -48,6 +47,8 @@
 			size = control.STATE.push( {} );
 			index = size - 1;
 			stateField = control.STATE[ index ];
+
+			column = control.columnContainer.clone().insertBefore( control.btnNew );
 
 			$.each( control.params.fields, function (key, field) {
 				var id, defaultValue = '';
@@ -66,7 +67,7 @@
 				// Watch setting
 				setting.bind( _.bind( control.watchFieldValue, {control: control, index: index, key: key} ) );
 
-				// Reset field arguments
+				// Reset field arguments (@todo: media controls use value filled params to render correctly. Params are retrieved by _wpCustomizeSettings, but we can't pass them from server to client without loading every control individual)
 				field.args = _.extend( field.args, {
 					content: null,
 					priority: 10 + index,
@@ -79,8 +80,10 @@
 				options = _.extend( { params: field.args }, field.args );
 				Control = new Constructor( id, options );
 
-				api.control.add( Control );
+				//api.control.add( Control ); (@todo: disabled so far, because it manipulates our previous dom settings)
 				setting.preview();
+
+				column.find( 'ul' ).append( Control.container );
 			} );
 		},
 
@@ -103,7 +106,13 @@
 		},
 
 		normalizeSaveRequestQuery: function (query) {
-			var control = this, changes = JSON.parse( query.customized );
+			var control = this, changes;
+
+			try {
+				changes = JSON.parse( query.customized );
+			} catch (e) {
+				return;
+			}
 
 			$.each(changes, function(key, value) {
 				if ( control.fieldQueryPattern.exec( key ) ) {

@@ -25,8 +25,8 @@ class Theme_Customize_Repeater_Control extends WP_Customize_Control {
 
 		$this->_settings = isset( $this->args['settings'] ) ? $this->args['settings'] : $this->id;
 
-		if ( is_array( $this->fields ) && ! empty( $this->fields) ) {
-			$this->prepare_fields( $this->fields);
+		if ( is_array( $this->fields ) && ! empty( $this->fields ) ) {
+			$this->prepare_fields( $this->fields );
 		}
 
 		// Force control type to 'repeater'
@@ -37,7 +37,8 @@ class Theme_Customize_Repeater_Control extends WP_Customize_Control {
 	** Enqueue control related scripts/styles
 	*/
 	public function enqueue() {
-		wp_enqueue_script('customize-repeater-control', get_stylesheet_directory_uri() . 'customize-repeater-control.js', array('jquery', 'customize-controls'), false, true);
+		wp_enqueue_style('customize-repeater-control', THEME_URI . 'inc/customize-repeater/customize-repeater-control.css', array('customize-controls'));
+		wp_enqueue_script('customize-repeater-control', THEME_URI . 'inc/customize-repeater/customize-repeater-control.js', array('jquery', 'customize-controls'), false, true);
 	}
 
 	/*
@@ -52,9 +53,7 @@ class Theme_Customize_Repeater_Control extends WP_Customize_Control {
 
 			$field['control'] = str_replace(array('WP_Customize', '_'), '', $field['control']);
 			$field['args'] = $Control->json();
-
 		}
-
 
 		$this->json['fields'] = $fields;
 	}
@@ -103,10 +102,20 @@ class Theme_Customize_Repeater_Control extends WP_Customize_Control {
 	*/
 	public function content_template() {
 		?>
+		<# if ( data.label ) { #>
+			<span class="customize-control-title">{{{ data.label }}}</span>
+		<# } #>
 		<# if ( data.description ) { #>
 			<span class="description customize-control-description">{{{ data.description }}}</span>
 		<# } #>
 		<div class="customize-control-content">
+			<div class="customize-control-repeater-fields control-subsection">
+				<div class="customize-control-repeater-field accordion-section-title prototype">
+					<ul class="wp-clearfix">
+					</ul>
+				</div>
+			</div>
+
 			<div class="customize-control-repeater-buttons">
 				<button type="button" class="button customize-add-repeater-field" aria-label="<?php esc_attr_e( 'Add new item' ); ?>" aria-expanded="false" aria-controls="available-repeater-items">
 					<?php _e( 'Add Items' ) ?>
