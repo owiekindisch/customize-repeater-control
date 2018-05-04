@@ -106,10 +106,10 @@
 		},
 
 		normalizeSaveRequestQuery: function (query) {
-			var control = this, changes;
+			var control = this, changes = query.customized || query.customize_changeset_data;
 
 			try {
-				changes = JSON.parse( query.customized );
+				changes = JSON.parse( changes );
 			} catch (e) {
 				return;
 			}
@@ -120,7 +120,12 @@
 				}
 			});
 
-			query.customized = JSON.stringify( changes );
+			if ( query.hasOwnProperty( 'customized' ) ) {
+				query.customized = JSON.stringify( changes );
+			} else if ( query.hasOwnProperty( 'customize_changeset_data' ) ) {
+				query.customize_changeset_data = JSON.stringify( changes );
+			}
+			
 		}
 	});
 
