@@ -3,12 +3,15 @@ Repetitive control for the Theme Customization API of WordPress.
 
 _Currently under development_
 
-### Future Plans: ###
-*  Add an option to remove fields
-*  Support ordering
-*  Fully compatible with all default controls
+## Current status:
 
-### Usage: ###
+*  [x] Render content of applied controls
+*  [x] Save and retrieve repeater field values
+*  [ ] Fully compatible with all default controls
+*  [ ] Add an option to remove fields
+*  [ ] Support ordering
+
+## Usage:
 ````
 require_once 'customize-repeater-control.php';
 
