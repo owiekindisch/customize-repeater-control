@@ -8,7 +8,7 @@ _Currently under development_
 *  [x] Render content of applied controls
 *  [x] Save and retrieve repeater field values
 *  [ ] Fully compatible with all default controls
-*  [ ] Add an option to remove fields
+*  [x] Add an option to remove fields
 *  [ ] Support ordering
 
 ## Usage:
