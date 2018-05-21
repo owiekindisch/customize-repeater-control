@@ -6,6 +6,10 @@ if ( ! defined('ABSPATH') ) exit;
 if ( ! class_exists( 'WP_Customize_Control' ) ) return;
 
 class Theme_Customize_Repeater_Control extends WP_Customize_Control {
+	/*
+	** Field that is used as the repeater label
+	*/
+	protected $labelField = '';
 
 	/*
 	** Storage for repeater fields
@@ -23,7 +27,7 @@ class Theme_Customize_Repeater_Control extends WP_Customize_Control {
 	public function __construct( $manager, $id, $args = array() ) {
 		parent::__construct( $manager, $id, $args );
 
-		$this->_settings = isset( $this->args['settings'] ) ? $this->args['settings'] : $this->id;
+		$this->_settings = isset( $args['settings'] ) ? $args['settings'] : $this->id;
 
 		if ( is_array( $this->fields ) && ! empty( $this->fields ) ) {
 			$this->prepare_fields( $this->fields );
@@ -56,6 +60,7 @@ class Theme_Customize_Repeater_Control extends WP_Customize_Control {
 		}
 
 		$this->json['fields'] = $fields;
+		$this->json['labelField'] = $this->labelField;	
 	}
 
 	/*
@@ -109,18 +114,35 @@ class Theme_Customize_Repeater_Control extends WP_Customize_Control {
 			<span class="description customize-control-description">{{{ data.description }}}</span>
 		<# } #>
 		<div class="customize-control-content">
-			<div class="customize-control-repeater-fields control-subsection">
-				<div class="customize-control-repeater-field accordion-section-title prototype">
-					<ul class="wp-clearfix">
-					</ul>
+			<div class="customize-control-repeater-fields">
+				<div class="customize-control-repeater-field menu-item menu-item-edit-inactive prototype">
+					<div class="menu-item-bar">
+						<div class="customize-control-repeater-field-handle menu-item-handle">
+							<span class="item-title" aria-hidden="true">
+								<span class="menu-item-title"><?php _e( 'Key' ) ?></span>
+							</span>
+							<span class="item-controls">
+								<button type="button" class="button-link item-edit" aria-expanded="false">
+									<span class="screen-reader-text"><?php _ex( 'Edit', 'widget' ) ?></span>
+									<span class="toggle-indicator" aria-hidden="true"></span>
+								</button>
+							</span>
+						</div>
+					</div>
+					<div class="customize-control-repeater-field-settings menu-item-settings wp-clearfix">
+						<ul>
+
+						</ul>
+						<div class="menu-item-actions description-thin submitbox">
+							<button type="button" class="button-link button-link-delete item-delete submitdelete deletion"><?php _e( 'Delete' ) ?></button>
+						</div>
+					</div>
 				</div>
 			</div>
 
-			<div class="customize-control-repeater-buttons">
-				<button type="button" class="button customize-add-repeater-field" aria-label="<?php esc_attr_e( 'Add new item' ); ?>" aria-expanded="false" aria-controls="available-repeater-items">
-					<?php _e( 'Add Items' ) ?>
-				</button>
-			</div>
+			<button type="button" class="button customize-add-repeater-field" aria-label="<?php esc_attr_e( 'Add new item' ); ?>" aria-expanded="false" aria-controls="available-repeater-items">
+				<?php _e( 'Add Items' ) ?>
+			</button>
 		</div>
 		<?php
 	}

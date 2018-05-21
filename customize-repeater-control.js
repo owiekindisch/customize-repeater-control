@@ -7,12 +7,11 @@
 		ready: function ready() {
 			var control = this;
 
-			_.bindAll( this, 'addRepeaterRow', 'createRowSetting', 'normalizeSaveRequestQuery' );
+			_.bindAll( this, 'addRepeaterRow', 'deleteRepeaterRow', 'createRowSetting', 'normalizeSaveRequestQuery' );
 
 			this.STATE = [],
 			this.fieldQueryPattern = new RegExp( '^' + control.id + '\\[(\\d+)\\]\\[(\\S+)\\]$' );
-			this.rowContainer = this.container.find( '.customize-control-repeater-fields' );
-			this.columnContainer = this.container.find( '.customize-control-repeater-field.prototype' ).remove().clone().removeClass('prototype')
+			this.rowContainer = this.container.find( '.customize-control-repeater-field.prototype' ).remove().clone().removeClass('prototype')
 			this.btnNew = this.container.find( '.customize-add-repeater-field' );
 
 			this.setupRepeaterRows();
@@ -21,6 +20,8 @@
 			api.bind( 'save-request-params', this.normalizeSaveRequestQuery );
 
 			this.btnNew.on( 'click', this.addRepeaterRow );
+			this.container.on( 'click', '.customize-control-repeater-field .menu-item-handle', this.toggleFieldSettings );
+			this.container.on( 'click', '.customize-control-repeater-field .item-delete', this.deleteRepeaterRow );
 		},
 
 		setupRepeaterRows: function () {
@@ -38,7 +39,7 @@
 		},
 
 		addRepeaterRow: function (event) {
-			var control = this, Constructor, Control, options, size, index, column, setting, stateField, initialState;
+			var control = this, Constructor, Control, options, size, index, row, setting, stateField, initialState, fieldLabel;
 
 			if ( ! ( event instanceof Event ) ) {
 				initialState = event;
@@ -48,10 +49,13 @@
 			index = size - 1;
 			stateField = control.STATE[ index ];
 
-			column = control.columnContainer.clone().insertBefore( control.btnNew );
+			row = control.rowContainer.clone().insertBefore( control.btnNew );
+			row.data( 'index', index );
+
+			fieldLabel = row.find( '.menu-item-title' );
 
 			$.each( control.params.fields, function (key, field) {
-				var id, defaultValue = '';
+				var id, defaultValue = '', label;
 
 				if ( initialState && initialState[ index ] && initialState[ index ].hasOwnProperty( key ) ) {
 					defaultValue = initialState[ index ][ key ];
@@ -83,7 +87,14 @@
 				//api.control.add( Control ); (@todo: disabled so far, because it manipulates our previous dom settings)
 				setting.preview();
 
-				column.find( 'ul' ).append( Control.container );
+				// Add template data
+				label = stateField[ key ] || field.args.label
+				if ( control.params.labelField && key === control.params.labelField && label ) {
+					fieldLabel.html( label )
+				}
+
+				// Add field to row
+				row.find( 'ul' ).append( Control.container );
 			} );
 		},
 
@@ -98,6 +109,18 @@
 			setting.set( defaultValue );
 
 			return setting;
+		},
+
+		deleteRepeaterRow: function (event) {
+			var row = $( event.target ).closest( '.customize-control-repeater-field' );
+			var index = row.data( 'index' );
+
+			this.STATE.splice( index, 1 );
+			this.setting.set( JSON.stringify( this.STATE ) );
+
+			console.log(this.setting.get())
+
+			row.remove();
 		},
 
 		watchFieldValue: function (value) {
@@ -126,6 +149,10 @@
 				query.customize_changeset_data = JSON.stringify( changes );
 			}
 			
+		},
+
+		toggleFieldSettings: function () {
+			$( this ).closest('.menu-item').toggleClass( 'menu-item-edit-inactive' ).toggleClass( 'menu-item-edit-active' )
 		}
 	});
 
