@@ -7,6 +7,8 @@ require_once 'customize-repeater-control.php';
 
 add_action( 'customize_register', 'mytheme_customize_register' );
 function mytheme_customize_register( $wp_customize ) {
+        $wp_customize->register_control_type('Theme_Customize_Repeater_Control');
+
 	$wp_customize->add_setting( 'mytheme_value_xyz', array(
 		'default'        => 'Hello World!',
 		'capability'     => 'edit_theme_options',
