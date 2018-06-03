@@ -1,16 +1,6 @@
 # [WordPress] Customize Repeater Control
 Repetitive control for the Theme Customization API of WordPress.
 
-_Currently under development_
-
-## Current status:
-
-*  [x] Render content of applied controls
-*  [x] Save and retrieve repeater field values
-*  [x] Fully compatible with all default controls
-*  [x] Add an option to remove fields
-*  [ ] Support ordering
-
 ## Usage:
 ````
 require_once 'customize-repeater-control.php';
