@@ -41,7 +41,6 @@ class Theme_Customize_Repeater_Control extends WP_Customize_Control {
 	** Enqueue control related scripts/styles
 	*/
 	public function enqueue () {
-		//wp_enqueue_style('customize-repeater-control', THEME_URI . 'inc/customize-controls/customize-repeater-control.css', array('customize-controls'));
 		wp_enqueue_script('customize-repeater-control', THEME_URI . 'inc/customize-controls/customize-repeater-control.js', array('jquery', 'customize-controls'), false, true);
 	}
 
@@ -171,11 +170,3 @@ class Theme_Customize_Repeater_Control extends WP_Customize_Control {
 		<?php
 	}
 }
-
-/*
-add_action('customize_register', 'themeRegisterCustomizeRepeaterControl', 11);
-function themeRegisterCustomizeRepeaterControl ($wp_customize) {
-	// Require JS-rendered control types.
-	$wp_customize->register_control_type('Theme_Customize_Repeater_Control');
-}
-*/
