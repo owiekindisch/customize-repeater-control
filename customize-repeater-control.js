@@ -10,8 +10,8 @@
 			_.bindAll( this, 'addRepeaterRow', 'deleteRepeaterRow', 'createRowSetting', 'normalizeSaveRequestQuery' );
 
 			this.STATE = [],
-			this.fieldQueryPattern = new RegExp( '^' + control.id + '\\[(\\d+)\\]\\[(\\S+)\\]$' );
-			this.rowContainer = this.container.find( '.customize-control-repeater-field.prototype' ).remove().clone().removeClass('prototype')
+			this.fieldQueryPattern = new RegExp( '^' + control.id + '_(\\d+)_(\\S+)$' );
+			this.rowPrototype = this.container.find( '.customize-control-repeater-field.prototype' ).remove().clone().removeClass('prototype')
 			this.btnNew = this.container.find( '.customize-add-repeater-field' );
 
 			this.setupRepeaterRows();
@@ -49,7 +49,7 @@
 			index = size - 1;
 			stateField = control.STATE[ index ];
 
-			row = control.rowContainer.clone().insertBefore( control.btnNew );
+			row = control.rowPrototype.clone().insertBefore( control.btnNew );
 			row.data( 'index', index );
 
 			fieldLabel = row.find( '.menu-item-title' );
@@ -62,7 +62,7 @@
 				}
 
 				// Set id
-				id = control.id + '[' + index + ']' + '[' + key + ']';
+				id = control.id + '_' + index + '_' + key;
 
 				// Create new setting
 				setting = control.createRowSetting( id, defaultValue );
@@ -71,7 +71,7 @@
 				// Watch setting
 				setting.bind( _.bind( control.watchFieldValue, {control: control, index: index, key: key} ) );
 
-				// Reset field arguments (@todo: media controls use value filled params to render correctly. Params are retrieved by _wpCustomizeSettings, but we can't pass them from server to client without loading every control individual)
+				// Reset field arguments (@todo: media controls have args['attachment'] that gets filled by its value and stored in _wpCustomizeSettings[Controls], but we can't pass them from server to client without loading every control individual)
 				field.args = _.extend( field.args, {
 					content: null,
 					priority: 10 + index,
@@ -80,11 +80,16 @@
 					}
 				} );
 
+				// Set attachment for media controls
+				if (field.attachments && 'image' === field.args.type) {
+					field.args.attachment = field.attachments[index] || null
+				}
+
 				Constructor = api[ field.control ] || api.Control;
 				options = _.extend( { params: field.args }, field.args );
 				Control = new Constructor( id, options );
 
-				//api.control.add( Control ); (@todo: disabled so far, because it manipulates our previous dom settings)
+				//api.control.add( Control ); //@todo: disabled so far, because it manipulates our previous dom settings
 				setting.preview();
 
 				// Add template data
@@ -94,7 +99,7 @@
 				}
 
 				// Add field to row
-				row.find( 'ul' ).append( Control.container );
+				row.find( '.customize-control-repeater-field-settings' ).append( Control.container );
 			} );
 		},
 
@@ -117,8 +122,6 @@
 
 			this.STATE.splice( index, 1 );
 			this.setting.set( JSON.stringify( this.STATE ) );
-
-			console.log(this.setting.get())
 
 			row.remove();
 		},
