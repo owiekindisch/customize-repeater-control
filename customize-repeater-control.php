@@ -41,7 +41,8 @@ class Theme_Customize_Repeater_Control extends WP_Customize_Control {
 	** Enqueue control related scripts/styles
 	*/
 	public function enqueue () {
-		wp_enqueue_script('customize-repeater-control', THEME_URI . 'inc/customize-controls/customize-repeater-control.js', array('jquery', 'customize-controls'), false, true);
+		wp_enqueue_script('customize-repeater-control', get_template_directory_uri() . '/inc/customize-repeater-control/customize-repeater-control.js', array('jquery', 'customize-controls'), false, true);
+		wp_enqueue_style('customize-repeater-control', get_template_directory_uri() . '/inc/customize-repeater-control/customize-repeater-control.css', array(), false);
 	}
 
 	/*
@@ -142,7 +143,7 @@ class Theme_Customize_Repeater_Control extends WP_Customize_Control {
 					<div class="menu-item-bar">
 						<div class="customize-control-repeater-field-handle menu-item-handle">
 							<span class="item-title" aria-hidden="true">
-								<span class="menu-item-title"><?php _e('Key') ?></span>
+								<span class="menu-item-title">&nbsp;</span>
 							</span>
 							<span class="item-controls">
 								<button type="button" class="button-link item-edit" aria-expanded="false">
@@ -162,9 +163,9 @@ class Theme_Customize_Repeater_Control extends WP_Customize_Control {
 					</div>
 				</div>
 			</div>
-
+			
 			<button type="button" class="button customize-add-repeater-field" aria-label="<?php esc_attr_e('Add new item'); ?>" aria-expanded="false" aria-controls="available-repeater-items">
-				<?php _e('Add Items') ?>
+				<?php _e('Add New Item') ?>
 			</button>
 		</div>
 		<?php

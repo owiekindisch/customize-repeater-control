@@ -7,32 +7,41 @@ require_once 'customize-repeater-control.php';
 
 add_action( 'customize_register', 'mytheme_customize_register' );
 function mytheme_customize_register( $wp_customize ) {
-        $wp_customize->register_control_type('Theme_Customize_Repeater_Control');
+    $wp_customize->register_control_type( 'Theme_Customize_Repeater_Control' );
 
-	$wp_customize->add_setting( 'mytheme_value_xyz', array(
-		'default'        => 'Hello World!',
-		'capability'     => 'edit_theme_options',
-		'type'           => 'option'
+	$wp_customize->add_setting( 'mytheme_frontend_slideshow', array(
+		'capability' => 'edit_theme_options',
+		'type'       => 'theme_mod' // or can be 'option'
+		'default'    => json_encode( array(
+			array(
+				'image' => 'http://plugins.local/wp-content/uploads/2020/10/hoodie-with-logo.jpg',
+				'url'   => 'http://plugins.local/hoodie',
+			),
+			array(
+				'image' => 'http://plugins.local/wp-content/uploads/2020/10/beanie.jpg',
+				'url'   => 'http://plugins.local/beanie',
+			),
+		), JSON_UNESCAPED_SLASHES ),
 	) );
 
-	$wp_customize->add_control( new Theme_Customize_Repeater_Control( $wp_customize, 'mytheme_value_xyz', array(
-		'label'       => __( 'Item', 'mytheme' ),
-		'section'     => 'title_tagline',
-		'fields'      => array(
+	$wp_customize->add_control( new Theme_Customize_Repeater_Control( $wp_customize, 'mytheme_frontend_slideshow', array(
+		'label'   => __( 'Item', 'mytheme' ),
+		'section' => 'title_tagline',
+		'fields'  => array(
 			array(
-				'key'     => 'key',
-				'control' => 'WP_Customize_Control',
+				'key'     => 'image',
+				'control' => 'WP_Customize_Image_Control',
 				'args'    => array(
-					'label' => __( 'Item key', 'mytheme' ),
+					'label' => __( 'Image', 'mytheme' ),
 				)
 			),
 			array(
-				'key'     => 'value',
+				'key'     => 'url',
 				'control' => 'WP_Customize_Control',
 				'args'    => array(
-					'label' => __( 'Item value', 'mytheme' ),
+					'label' => __( 'URL', 'mytheme' ),
 				)
-			)
+			),			
 		)
 	) ) );
 }
