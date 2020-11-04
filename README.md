@@ -1,7 +1,7 @@
 # [WordPress] Customize Repeater Control
 Repetitive control for the Theme Customization API of WordPress.
 
-## Usage:
+## Back-end Usage:
 ````
 require_once 'customize-repeater-control.php';
 
@@ -45,4 +45,25 @@ function mytheme_customize_register( $wp_customize ) {
 		)
 	) ) );
 }
+````
+
+## Front-end Usage:
+````
+// get data from theme mod
+$slideshow = get_theme_mod( "mytheme_frontend_slideshow", json_encode( array(
+	array(
+		'image' => 'http://plugins.local/wp-content/uploads/2020/10/hoodie-with-logo.jpg',
+		'url'   => 'http://plugins.local/hoodie',
+	),
+	array(
+		'image' => 'http://plugins.local/wp-content/uploads/2020/10/beanie.jpg',
+		'url'   => 'http://plugins.local/beanie',
+	),
+), JSON_UNESCAPED_SLASHES ) );
+
+// the repeater data is a json data, so it's need to be encoded to array
+$slideshow = json_decode( $slideshow, JSON_OBJECT_AS_ARRAY );
+
+// check the data
+var_dump( $slideshow );
 ````
