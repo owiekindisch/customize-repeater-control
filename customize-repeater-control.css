@@ -1,0 +1,43 @@
+.customize-control-content .customize-control-repeater-field {
+	margin-bottom: 10px;	
+}
+
+.customize-control-content .customize-control-repeater-field .customize-control-repeater-field-handle {
+	cursor: pointer;
+}
+
+.customize-control-content .customize-control-repeater-field .menu-item-settings {
+	background: #fff;
+    border-top: 1px solid #999;
+}
+
+.customize-control-content .customize-control-repeater-field button.button.default-button {
+	display: none;
+}
+
+.customize-control.customize-control-repeater {
+	counter-reset: section;
+}
+
+.customize-control.customize-control-repeater .customize-control-content > .customize-control-repeater-field .menu-item-bar:before {
+	counter-increment: section;
+    content: "Item " counter(section);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    padding: 10px 15px;
+    height: auto;
+    min-height: 20px;
+    font-weight: 600;
+    color: #555d66;
+    font-size: 14px;
+}
+
+.customize-control.customize-control-repeater .customize-control-content > .customize-control-repeater-field .menu-item-bar {
+	position: relative;
+}
+
+.customize-control.customize-control-repeater .customize-control-content button.customize-add-repeater-field {
+	float: right;
+}
